@@ -6,7 +6,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ai_texts_dev
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "
+      python manage.py runserver 0.0.0.0:8000
+      && python manage.py livereload
+      "
     volumes:
       - .:/app               
       - dev_db:/app/db      

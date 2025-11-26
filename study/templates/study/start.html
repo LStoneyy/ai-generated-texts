@@ -1,21 +1,10 @@
 {% extends "study/base.html" %}
-
 {% block title %}Start{% endblock %}
-
 {% block content %}
 <h1>AI Detection Study</h1>
-
 <form method="POST">
-  {% csrf_token %}
-  <label>Name:</label>
-  <input type="text" name="name" required>
-
-  <label>Years of teaching experience:</label>
-  <input type="number" name="experience" required>
-
-  <label>Department:</label>
-  <input type="text" name="department" required>
-
-  <button type="submit">Start</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Start</button>
 </form>
 {% endblock %}
