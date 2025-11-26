@@ -81,26 +81,60 @@ docker-compose -f docker-compose.dev.yml exec web python manage.py createsuperus
 # Access at http://localhost:8000
 ```
 
-### Production Deployment (VPS)
+
+# Production Deployment (VPS)
+
+This guide explains how to deploy the AI Detection Study Django app on a VPS using Docker Compose with SQLite.
+
+## Steps
+
+1. **Clone the repository and navigate to the project folder**
+
 ```bash
-# On VPS
 git clone <repository-url>
-cd ai_detection_study
+cd ai-generated-texts
+```
 
-# Build and start production stack
+2. **Build and start the containers**
+
+```bash
 docker-compose -f docker-compose.prod.yml up -d --build
+```
 
-# Run migrations
+3. **Apply Django migrations**
+
+```bash
 docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
+```
 
-# Collect static files
+4. **Collect static files**
+
+```bash
 docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
 ```
 
-## Branch Strategy
+5. **Optional: Create a superuser**
+   Only if you haven't created one yet:
 
-- `main` → Local development  
-- `vps` → Production deployment on VPS
+```bash
+docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperuser
+```
+
+---
+
+## Notes
+
+* **SQLite:** The database is stored in a Docker volume to ensure persistence.
+* **Static Files:** Collected in `staticfiles/` and served by Nginx.
+* **Container Restart / Updates:**
+  When updating the app, rebuild and restart containers:
+
+```bash
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+
+* Running migrations after a restart is usually **not necessary** unless you have changes in `models.py` or new database fields.
 
 ## Data Analysis
 
@@ -116,7 +150,7 @@ This project is inspired by the study:
 
 > Fleckenstein, J., Meyer, J., Jansen, T., Keller, S. D., Köller, O., & Möller, J. (2024). Do teachers spot AI? Evaluating the detectability of AI-generated texts among student essays. *Computers and Education: Artificial Intelligence*, 6, 100209.
 
-The original study focused on K-12 teachers; this replication extends the investigation to the university context.
+The original study focused on teachers; this replication extends the investigation to the university context.
 
 ## License
 MIT, see LICENSE
