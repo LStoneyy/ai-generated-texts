@@ -1,6 +1,7 @@
+
 # ai-generated-texts
 
-An empirical research project investigating the ability of university instructors to distinguish between AI-generated and human-written student essays in higher education.
+An empirical research project investigating the ability of university instructors to distinguish between AI-generated and human-written student essays in higher education, presented via a modern, minimalist, Gruvbox Dark-themed web interface.
 
 ## Research Question
 
@@ -13,21 +14,21 @@ An empirical research project investigating the ability of university instructor
 
 ## Methodology
 
-- **Sample:** 10 texts total (5 AI-generated, 5 human-written)
-- **Source:** BA/MA student essays from RWTH Aachen University
-- **Presentation:** Randomized order for each participant
-- **Data collected:** 
-  - Binary classification (AI vs. Human)
+- **Sample:** 10 texts total (5 AI-generated, 5 human-written)  
+- **Source:** BA/MA student essays from RWTH Aachen University  
+- **Presentation:** Randomized order for each participant  
+- **Data collected:**
+  - Participant demographics: Name, years of teaching experience, Department
+  - Binary classification per text (AI vs. Human)
   - Confidence rating (1-5 Likert scale)
   - Response time per text
-  - Participant demographics (name, years of teaching experience, department)
 
 ## Tech Stack
 
-- **Backend:** Django 5.0+
-- **Database:** SQLite3
-- **Frontend:** Vanilla CSS (Nord theme), Vanilla JavaScript
-- **Deployment:** Docker + Docker Compose + Nginx + Gunicorn
+- **Backend:** Django 5.0+  
+- **Database:** SQLite3  
+- **Frontend:** Vanilla CSS (Gruvbox Dark theme), Clash Display (Headings), Epilogue (Body), Vanilla JavaScript  
+- **Deployment:** Docker + Docker Compose + Nginx + Gunicorn  
 - **VPS:** IONOS
 
 ## Project Structure
@@ -39,7 +40,10 @@ ai_detection_study/
 ├── requirements.txt
 ├── manage.py
 ├── config/
-│   ├── settings.py
+│   ├── settings/
+│   │   ├── base.py
+│   │   ├── dev.py
+│   │   └── prod.py
 │   ├── urls.py
 │   └── wsgi.py
 ├── study/
@@ -47,9 +51,13 @@ ai_detection_study/
 │   ├── views.py
 │   ├── urls.py
 │   ├── admin.py
-│   └── templates/
+│   ├── forms.py
+│   └── templates/study/
 ├── static/
 │   ├── css/
+│   │   ├── base.css
+│   │   ├── forms.css
+│   │   ├── header.css
 │   └── js/
 └── nginx/
 ```
@@ -62,10 +70,10 @@ ai_detection_study/
 git clone <repository-url>
 cd ai_detection_study
 
-# Start development server
+# Start development server with livereload
 docker-compose -f docker-compose.dev.yml up --build
 
-# first setup
+# First-time setup
 docker-compose -f docker-compose.dev.yml exec web python manage.py makemigrations
 docker-compose -f docker-compose.dev.yml exec web python manage.py migrate
 docker-compose -f docker-compose.dev.yml exec web python manage.py createsuperuser
@@ -79,7 +87,7 @@ docker-compose -f docker-compose.dev.yml exec web python manage.py createsuperus
 git clone <repository-url>
 cd ai_detection_study
 
-# Build and start
+# Build and start production stack
 docker-compose -f docker-compose.prod.yml up -d --build
 
 # Run migrations
@@ -91,14 +99,15 @@ docker-compose -f docker-compose.prod.yml exec web python manage.py collectstati
 
 ## Branch Strategy
 
-- `main` → Local development
+- `main` → Local development  
 - `vps` → Production deployment on VPS
 
 ## Data Analysis
 
 Collected data will be analyzed using:
-- Accuracy calculation: `(correct classifications / total) × 100`
-- One-sample t-test (mean accuracy vs. 50% chance level)
+
+- Accuracy calculation: `(correct classifications / total) × 100`  
+- One-sample t-test (mean accuracy vs. 50% chance level)  
 - Correlation/regression analysis for confidence ratings and response times
 
 ## Research Context
@@ -110,9 +119,10 @@ This project is inspired by the study:
 The original study focused on K-12 teachers; this replication extends the investigation to the university context.
 
 ## License
-
-[Your chosen license]
+MIT, see LICENSE
 
 ## Contact
+Lukas Schaffrath
+lukas.schaffrath2@rwth-aachen.de
 
-[Your contact information]
+

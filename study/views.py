@@ -70,3 +70,11 @@ def finish(request):
     # Session löschen (optional)
     request.session.flush()
     return render(request, "study/finish.html")
+
+
+def impressum(request):
+    return render(request, "study/impressum.html")
+
+
+def datenschutz(request):
+    return render(request, "study/datenschutz.html")

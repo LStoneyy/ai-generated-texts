@@ -7,12 +7,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}AI Detection Study{% endblock %}</title>
   <link rel="stylesheet" href="{% static "/css/base.css" %}">
+  <link rel="stylesheet" href="{% static "/css/forms.css" %}">
+  <link rel="stylesheet" href="{% static "/css/header.css" %}">
+  <link rel="stylesheet" href="{% static "/css/footer.css" %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static "/img/apple-touch-icon.png" %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static "/img/favicon-32x32.png" %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static "/img/favicon-16x16.png" %}">
+  <link rel="manifest" href="{% static "/img/site.webmanifest" %}">
 </head>
 
 <body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo"><a href="/"> AI Detection Study</a></div>
+    <nav>
+
+    </nav>
+  </header>
+
+  <!-- Main Content -->
   <main class="container">
     {% block content %}{% endblock %}
   </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Lukas Schaffrath</p>
+    <p>
+      <a href="/impressum/">Impressum</a> | 
+      <a href="/datenschutz/">Datenschutz</a> | 
+      <a href="https://www.rwth-aachen.de">RWTH Aachen</a>
+    </p>
+  </footer>
+</body>
 </body>
 
 <script src="{% static "/js/classify.js" %}"></script>
