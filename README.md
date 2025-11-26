@@ -65,6 +65,11 @@ cd ai_detection_study
 # Start development server
 docker-compose -f docker-compose.dev.yml up --build
 
+# first setup
+docker-compose -f docker-compose.dev.yml exec web python manage.py makemigrations
+docker-compose -f docker-compose.dev.yml exec web python manage.py migrate
+docker-compose -f docker-compose.dev.yml exec web python manage.py createsuperuser
+
 # Access at http://localhost:8000
 ```
 
