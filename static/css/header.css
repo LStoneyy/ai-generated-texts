@@ -34,6 +34,54 @@ header nav a:hover {
   color: var(--color-primary);
 }
 
+.theme-toggle {
+  position: relative;
+  /* wichtig */
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text);
+}
+
+.theme-toggle:hover {
+  color: var(--color-accent);
+  background-color: transparent !important;
+}
+
+
+.theme-toggle .icon {
+  position: absolute;
+  /* stack icons */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  margin: auto;
+  width: 24px;
+  height: 24px;
+
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.icon.hidden {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+}
+
 @media (max-width: 768px) {
   header {
     flex-direction: column;

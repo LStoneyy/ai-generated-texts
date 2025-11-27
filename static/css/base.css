@@ -3,19 +3,36 @@
 /* --- Import Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;700&family=Epilogue:wght@400;500;600&display=swap');
 
-/* --- Colors Gruvbox Dark --- */
+
+/* --- Nord Dark --- */
 :root {
-  --color-bg: #282828;
-  --color-bg-alt: #3c3836;
-  --color-text: #ebdbb2;
-  --color-primary: #d3869b;
-  /* pink/purple */
-  --color-secondary: #b8bb26;
-  /* green */
-  --color-accent: #fe8019;
-  /* orange */
-  --color-border: #504945;
-  --color-header: #1d2021;
+  --color-bg: #2e3440;
+  --color-bg-alt: #3b4252;
+  --color-header: #2e3440;
+  --color-text: #eceff4;
+
+  --color-primary: #88c0d0;
+  /* frost blue */
+  --color-secondary: #81a1c1;
+  /* desaturated blue */
+  --color-accent: #bf616a;
+  /* aurora red */
+
+  --color-border: #4c566a;
+}
+
+/* --- Nord Light / Frost --- */
+:root.light {
+  --color-bg: #eceff4;
+  --color-bg-alt: #e5e9f0;
+  --color-header: #d8dee9;
+  --color-text: #2e3440;
+
+  --color-primary: #5e81ac;
+  --color-secondary: #81a1c1;
+  --color-accent: #bf616a;
+
+  --color-border: #c8d0e0;
 }
 
 /* --- Global Reset --- */
@@ -23,6 +40,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 html,
@@ -32,6 +50,12 @@ body {
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-bg);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 h1,
@@ -57,11 +81,19 @@ p {
   margin-bottom: 1rem;
 }
 
+
 /* --- Container --- */
 .container {
   max-width: 900px;
   margin: 0 auto;
   padding: 1rem;
+  width: 100%;
+}
+
+/* Main grows so footer stays at bottom */
+main {
+  flex: 1;
+  display: flex;
 }
 
 /* --- Header --- */
@@ -120,13 +152,14 @@ button:hover {
 
 /* --- Text Blocks (z.B. Klassifizierungs-Text) --- */
 .text-block {
-  background-color: #32302f;
+  background-color: var(--color-bg-alt);
   padding: 1rem 1.5rem;
   border-left: 4px solid var(--color-secondary);
   border-radius: 8px;
   margin-bottom: 1rem;
   white-space: pre-line;
   font-size: 1rem;
+  color: var(--color-text);
 }
 
 /* --- Responsive --- */

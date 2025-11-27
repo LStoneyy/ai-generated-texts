@@ -16,7 +16,7 @@ textarea {
   margin-bottom: 1rem;
   border-radius: 8px;
   border: 1px solid var(--color-border);
-  background-color: #3c3836;
+  background-color: var(--color-bg);
   color: var(--color-text);
   font-family: 'Epilogue', sans-serif;
 }
