@@ -1,8 +1,45 @@
 {% extends "study/base.html" %}
-
-{% block title %}Finished{% endblock %}
-
 {% block content %}
-<h1>Thank you!</h1>
-<p>Your responses have been recorded.</p>
+<h2>Your Results</h2>
+{% if results %}
+
+<div class="table-responsive">
+    <table>
+        <tr>
+            <th>Text</th>
+            <th>Your Classification</th>
+            <th>Actual</th>
+            <th>Correct?</th>
+        </tr>
+        {% for r in results %}
+        <tr>
+            <td>{{ r.text|truncatechars:100 }}</td>
+            <td>
+                {% if r.classification == "ai" %}
+                    AI-generated
+                {% else %}
+                    Human-written
+                {% endif %}
+            </td>
+            <td>
+                {% if r.actual_origin == "ai" %}
+                    AI-generated
+                {% else %}
+                    Human-written
+                {% endif %}
+            </td>
+            <td>
+                {% if r.correct %}
+                    ✅
+                {% else %}
+                    ❌
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% else %}
+<p>No results found.</p>
+{% endif %}
 {% endblock %}

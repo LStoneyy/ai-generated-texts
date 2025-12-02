@@ -65,11 +65,23 @@ def classify(request, index):
     return render(request, "study/classify.html", context)
 
 
-# Abschlussseite
 def finish(request):
-    # Session löschen (optional)
-    request.session.flush()
-    return render(request, "study/finish.html")
+    participant_id = request.session.get('participant_id')
+    if not participant_id:
+        return render(request, 'study/finish.html', {'results': None})
+
+    responses = Response.objects.filter(participant_id=participant_id).select_related('text')
+    results = []
+    for response in responses:
+        # Use 'origin' field from TextItem and 'classification' from Response
+        correct = (response.classification == response.text.origin)
+        results.append({
+            'text': response.text.body,
+            'classification': response.classification,
+            'actual_origin': response.text.origin,
+            'correct': correct,
+        })
+    return render(request, 'study/finish.html', {'results': results})
 
 
 def impressum(request):

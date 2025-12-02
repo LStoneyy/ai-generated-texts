@@ -162,6 +162,69 @@ button:hover {
   color: var(--color-text);
 }
 
+/* Responsive and modern table styling for results */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 600px; /* Ensures horizontal scroll on small screens */
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 1rem;
+    text-align: left;
+}
+
+th {
+    background: var(--color-bg-alt);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid var(--color-border);
+}
+
+tr {
+    transition: background 0.2s;
+}
+
+tr:nth-child(even) {
+    background: var(--color-bg-alt);
+}
+
+tr:hover {
+    background: var(--color-border);
+}
+
+td {
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+
+/* Remove bottom border from last row's cells for rounded corners */
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Remove block display for mobile, keep horizontal scroll */
+@media (max-width: 700px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+    th, td {
+        white-space: nowrap;
+    }
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
 
