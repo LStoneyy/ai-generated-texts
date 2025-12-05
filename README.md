@@ -27,7 +27,7 @@ An empirical research project investigating the ability of university instructor
 - **Backend:** Django 5.0+  
 - **Database:** SQLite3  
 - **Frontend:** Vanilla CSS, Vanilla JavaScript  
-- **Deployment:** PythonAnywhere
+- **Deployment:** PythonAnywhere (venv name: "venv")
 
 ## Local Development
 
