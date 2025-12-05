@@ -32,6 +32,8 @@ An empirical research project investigating the ability of university instructor
 ## Local Development
 
 ```bash
+git clone https://github.com/LStoneyy/ai-generated-texts.git
+cd ai-generated-texts/
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
