@@ -1,0 +1,168 @@
+
+================================================================================
+AI TEXT DETECTION STUDY - STATISTICAL ANALYSIS
+================================================================================
+
+Analysis date: 2025-12-14 12:09:28
+Loading data from: Response-2025-12-14.csv
+
+
+✓ Text ID mapping saved to: analysis_Response-2025-12-14_20251214_120928/text_id_mapping.txt
+================================================================================
+DESCRIPTIVE STATISTICS
+================================================================================
+
+Number of participants: 4
+
+Participant demographics:
+  Mean teaching experience: 6.75 years (SD=3.59)
+  Range: 2 - 10 years
+
+Departments represented:
+participant__department
+English Linguistics    2
+Language Competence    1
+IfA                    1
+
+Total number of texts: 10
+AI-generated texts: 5
+Human-written texts: 5
+
+Total responses collected: 40
+
+Classifications:
+  Classified as AI: 14
+  Classified as Human: 26
+
+Confidence ratings:
+  Mean: 3.65 (SD=0.74)
+  Median: 4
+  Range: 2 - 5
+
+Response times:
+  Mean: 70.83 seconds (SD=45.85)
+  Median: 63.69 seconds
+  Range: 12.02 - 206.24 seconds
+
+================================================================================
+ACCURACY ANALYSIS
+================================================================================
+
+Overall accuracy: 80.00%
+
+Accuracy by participant:
+  Mean: 80.00% (SD=16.33%)
+  Range: 60.00% - 100.00%
+
+Accuracy by text origin:
+  AI-generated: 65.00% (13/20)
+  HUMAN-generated: 95.00% (19/20)
+
+Confusion Matrix:
+classification  ai  human  All
+text__origin                  
+ai              13      7   20
+human            1     19   20
+All             14     26   40
+
+Diagnostic measures:
+  Sensitivity (True Positive Rate): 65.00%
+  Specificity (True Negative Rate): 95.00%
+
+================================================================================
+HYPOTHESIS TESTING
+================================================================================
+
+H0: Accuracy = 50% (chance level)
+H1: Accuracy ≠ 50%
+
+One-sample t-test:
+  t(3) = 3.674
+  p-value = 0.0349
+  Mean accuracy: 80.00%
+  95% CI: [64.00%, 96.00%]
+
+  Result: REJECT H0 (p < 0.05)
+  Conclusion: Participants performed significantly BETTER than chance.
+
+  Effect size (Cohen's d): 1.837
+  Interpretation: large effect
+
+================================================================================
+CORRELATION ANALYSIS
+================================================================================
+
+Accuracy vs. Confidence:
+  Pearson r = 0.707, p = 0.2929
+
+Accuracy vs. Response Time:
+  Pearson r = -0.933, p = 0.0670
+
+Accuracy vs. Teaching Experience:
+  Pearson r = 0.114, p = 0.8864
+
+Confidence by correctness:
+  Correct responses: M = 3.81 (SD = 0.64)
+  Incorrect responses: M = 3.00 (SD = 0.76)
+  t-test: t = 3.084, p = 0.0038
+
+================================================================================
+TEXT DIFFICULTY ANALYSIS
+================================================================================
+
+Texts ranked by difficulty (lowest accuracy first):
+
+                       accuracy  confidence  response_time
+text__id text__origin                                     
+6        ai                25.0        3.25      111473.25
+7        ai                50.0        3.00       69898.25
+2        human             75.0        3.75       73504.50
+8        ai                75.0        3.00       66910.50
+9        ai                75.0        3.25       48920.25
+4        human            100.0        3.75      117866.00
+1        human            100.0        4.25       55923.00
+3        human            100.0        4.25       60547.25
+5        human            100.0        4.25       62732.25
+10       ai               100.0        3.75       40506.00
+
+================================================================================
+GENERATING VISUALIZATIONS
+================================================================================
+✓ Saved: accuracy/histogram.png
+✓ Saved: accuracy/boxplot.png
+✓ Saved: accuracy/by_origin.png
+✓ Saved: accuracy/confusion_matrix.png
+✓ Saved: confidence_time/confidence_distribution.png
+✓ Saved: confidence_time/confidence_by_correctness.png
+✓ Saved: confidence_time/response_time_distribution.png
+✓ Saved: confidence_time/response_time_by_correctness.png
+✓ Saved: correlations/experience_vs_accuracy.png
+✓ Saved: correlations/confidence_vs_accuracy.png
+✓ Saved: by_text/accuracy_by_text.png
+
+================================================================================
+ANALYSIS COMPLETE
+================================================================================
+
+All results saved to: analysis_Response-2025-12-14_20251214_120928
+
+Generated structure:
+  analysis_results.txt
+  text_id_mapping.txt
+  accuracy/
+    - histogram.png
+    - boxplot.png
+    - by_origin.png
+    - confusion_matrix.png
+  confidence_time/
+    - confidence_distribution.png
+    - confidence_by_correctness.png
+    - response_time_distribution.png
+    - response_time_by_correctness.png
+  correlations/
+    - experience_vs_accuracy.png
+    - confidence_vs_accuracy.png
+  by_text/
+    - accuracy_by_text.png
+
+
