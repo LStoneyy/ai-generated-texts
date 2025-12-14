@@ -28,10 +28,10 @@ plt.rcParams['font.size'] = 10
 output_file = None
 output_dir = None
 
-def print_and_log(text=""):
-    """Print to console and write to log file"""
+def print_and_log(text="", console_only=False):
+    """Print to console and optionally write to log file"""
     print(text)
-    if output_file:
+    if output_file and not console_only:
         output_file.write(text + "\n")
 
 def create_output_structure(csv_filepath):
@@ -66,17 +66,17 @@ def export_text_mapping(df):
     """Export text ID to title mapping"""
     text_mapping = df[['text__id', 'text__title']].drop_duplicates().sort_values('text__id')
     
-    mapping_file = output_dir / "text_id_mapping.txt"
+    mapping_file = output_dir / "text_id_mapping.md"
     
     with open(mapping_file, 'w') as f:
-        f.write("=" * 80 + "\n")
-        f.write("TEXT ID TO TITLE MAPPING\n")
-        f.write("=" * 80 + "\n\n")
+        f.write("# Text ID to Title Mapping\n\n")
+        f.write("This document maps each Text ID used in the analysis to its full title.\n\n")
+        f.write("---\n\n")
         
         for _, row in text_mapping.iterrows():
-            f.write(f"Text {row['text__id']}: {row['text__title']}\n")
+            f.write(f"**Text {row['text__id']}:** {row['text__title']}\n\n")
     
-    print_and_log(f"\n✓ Text ID mapping saved to: {mapping_file}")
+    print_and_log(f"✓ Text ID mapping saved to: `{mapping_file.name}`\n")
     
     # Also print to console
     print("\n" + "=" * 80)
@@ -87,118 +87,122 @@ def export_text_mapping(df):
 
 def descriptive_statistics(df):
     """Calculate and display descriptive statistics"""
-    print_and_log("=" * 80)
-    print_and_log("DESCRIPTIVE STATISTICS")
-    print_and_log("=" * 80)
-    
     # Participant information
     participants = df.groupby('participant__id').first()
-    print_and_log(f"\nNumber of participants: {len(participants)}")
-    print_and_log(f"\nParticipant demographics:")
-    print_and_log(f"  Mean teaching experience: {participants['participant__experience'].mean():.2f} years (SD={participants['participant__experience'].std():.2f})")
-    print_and_log(f"  Range: {participants['participant__experience'].min():.0f} - {participants['participant__experience'].max():.0f} years")
-    print_and_log(f"\nDepartments represented:")
-    print_and_log(participants['participant__department'].value_counts().to_string())
+    
+    print_and_log(f"**Number of participants:** {len(participants)}\n")
+    
+    print_and_log("### Participant Demographics\n")
+    print_and_log(f"- **Mean teaching experience:** {participants['participant__experience'].mean():.2f} years (SD = {participants['participant__experience'].std():.2f})")
+    print_and_log(f"- **Range:** {participants['participant__experience'].min():.0f} - {participants['participant__experience'].max():.0f} years\n")
+    
+    print_and_log("**Departments represented:**\n")
+    dept_counts = participants['participant__department'].value_counts()
+    for dept, count in dept_counts.items():
+        print_and_log(f"- {dept}: {count}")
+    print_and_log("")
     
     # Text information
-    print_and_log(f"\nTotal number of texts: {df['text__id'].nunique()}")
-    print_and_log(f"AI-generated texts: {df[df['text__origin'] == 'ai']['text__id'].nunique()}")
-    print_and_log(f"Human-written texts: {df[df['text__origin'] == 'human']['text__id'].nunique()}")
+    print_and_log("### Text Information\n")
+    print_and_log(f"- **Total number of texts:** {df['text__id'].nunique()}")
+    print_and_log(f"- **AI-generated texts:** {df[df['text__origin'] == 'ai']['text__id'].nunique()}")
+    print_and_log(f"- **Human-written texts:** {df[df['text__origin'] == 'human']['text__id'].nunique()}\n")
     
     # Response information
-    print_and_log(f"\nTotal responses collected: {len(df)}")
-    print_and_log(f"\nClassifications:")
-    print_and_log(f"  Classified as AI: {(df['classification'] == 'ai').sum()}")
-    print_and_log(f"  Classified as Human: {(df['classification'] == 'human').sum()}")
+    print_and_log("### Response Information\n")
+    print_and_log(f"**Total responses collected:** {len(df)}\n")
+    print_and_log("**Classifications:**")
+    print_and_log(f"- Classified as AI: {(df['classification'] == 'ai').sum()}")
+    print_and_log(f"- Classified as Human: {(df['classification'] == 'human').sum()}\n")
     
     # Confidence ratings
-    print_and_log(f"\nConfidence ratings:")
-    print_and_log(f"  Mean: {df['confidence'].mean():.2f} (SD={df['confidence'].std():.2f})")
-    print_and_log(f"  Median: {df['confidence'].median():.0f}")
-    print_and_log(f"  Range: {df['confidence'].min():.0f} - {df['confidence'].max():.0f}")
+    print_and_log("### Confidence Ratings\n")
+    print_and_log(f"- **Mean:** {df['confidence'].mean():.2f} (SD = {df['confidence'].std():.2f})")
+    print_and_log(f"- **Median:** {df['confidence'].median():.0f}")
+    print_and_log(f"- **Range:** {df['confidence'].min():.0f} - {df['confidence'].max():.0f}\n")
     
     # Response times (convert from ms to seconds)
     df['response_time_sec'] = df['response_time'] / 1000
-    print_and_log(f"\nResponse times:")
-    print_and_log(f"  Mean: {df['response_time_sec'].mean():.2f} seconds (SD={df['response_time_sec'].std():.2f})")
-    print_and_log(f"  Median: {df['response_time_sec'].median():.2f} seconds")
-    print_and_log(f"  Range: {df['response_time_sec'].min():.2f} - {df['response_time_sec'].max():.2f} seconds")
+    print_and_log("### Response Times\n")
+    print_and_log(f"- **Mean:** {df['response_time_sec'].mean():.2f} seconds (SD = {df['response_time_sec'].std():.2f})")
+    print_and_log(f"- **Median:** {df['response_time_sec'].median():.2f} seconds")
+    print_and_log(f"- **Range:** {df['response_time_sec'].min():.2f} - {df['response_time_sec'].max():.2f} seconds\n")
 
 def accuracy_analysis(df):
     """Analyze classification accuracy"""
-    print_and_log("\n" + "=" * 80)
-    print_and_log("ACCURACY ANALYSIS")
-    print_and_log("=" * 80)
-    
     # Overall accuracy
     overall_accuracy = df['correct'].mean() * 100
-    print_and_log(f"\nOverall accuracy: {overall_accuracy:.2f}%")
+    print_and_log(f"**Overall accuracy:** {overall_accuracy:.2f}%\n")
     
     # Accuracy by participant
     participant_accuracy = df.groupby('participant__id')['correct'].mean() * 100
-    print_and_log(f"\nAccuracy by participant:")
-    print_and_log(f"  Mean: {participant_accuracy.mean():.2f}% (SD={participant_accuracy.std():.2f}%)")
-    print_and_log(f"  Range: {participant_accuracy.min():.2f}% - {participant_accuracy.max():.2f}%")
+    print_and_log("### Participant-Level Accuracy\n")
+    print_and_log(f"- **Mean:** {participant_accuracy.mean():.2f}% (SD = {participant_accuracy.std():.2f}%)")
+    print_and_log(f"- **Range:** {participant_accuracy.min():.2f}% - {participant_accuracy.max():.2f}%\n")
     
     # Accuracy by text origin
-    print_and_log(f"\nAccuracy by text origin:")
+    print_and_log("### Accuracy by Text Origin\n")
     for origin in ['ai', 'human']:
         origin_df = df[df['text__origin'] == origin]
         accuracy = origin_df['correct'].mean() * 100
-        print_and_log(f"  {origin.upper()}-generated: {accuracy:.2f}% ({origin_df['correct'].sum()}/{len(origin_df)})")
+        print_and_log(f"- **{origin.upper()}-generated:** {accuracy:.2f}% ({origin_df['correct'].sum()}/{len(origin_df)} correct)")
+    print_and_log("")
     
     # Confusion matrix
     confusion = pd.crosstab(df['text__origin'], df['classification'], margins=True)
-    print_and_log(f"\nConfusion Matrix:")
-    print_and_log(confusion.to_string())
+    print_and_log("### Confusion Matrix\n")
+    print_and_log("| Actual \\ Classified | AI | Human | Total |")
+    print_and_log("|---------------------|----:|------:|------:|")
+    
+    for idx in confusion.index:
+        if idx == 'All':
+            print_and_log(f"| **Total** | **{confusion.loc[idx, 'ai']}** | **{confusion.loc[idx, 'human']}** | **{confusion.loc[idx, 'All']}** |")
+        else:
+            print_and_log(f"| **{idx.upper()}** | {confusion.loc[idx, 'ai']} | {confusion.loc[idx, 'human']} | {confusion.loc[idx, 'All']} |")
+    print_and_log("")
     
     # Sensitivity and Specificity
     ai_texts = df[df['text__origin'] == 'ai']
     human_texts = df[df['text__origin'] == 'human']
     
-    # Sensitivity: correctly identified AI texts
     sensitivity = (ai_texts['classification'] == 'ai').mean() * 100
-    # Specificity: correctly identified human texts
     specificity = (human_texts['classification'] == 'human').mean() * 100
     
-    print_and_log(f"\nDiagnostic measures:")
-    print_and_log(f"  Sensitivity (True Positive Rate): {sensitivity:.2f}%")
-    print_and_log(f"  Specificity (True Negative Rate): {specificity:.2f}%")
+    print_and_log("### Diagnostic Measures\n")
+    print_and_log(f"- **Sensitivity (True Positive Rate):** {sensitivity:.2f}%")
+    print_and_log(f"- **Specificity (True Negative Rate):** {specificity:.2f}%\n")
     
     return participant_accuracy
 
 def hypothesis_testing(df, participant_accuracy):
     """Test hypotheses using statistical tests"""
-    print_and_log("\n" + "=" * 80)
-    print_and_log("HYPOTHESIS TESTING")
-    print_and_log("=" * 80)
+    print_and_log("### Hypotheses\n")
+    print_and_log("- **H₀ (Null Hypothesis):** Accuracy = 50% (chance level)")
+    print_and_log("- **H₁ (Alternative Hypothesis):** Accuracy ≠ 50%\n")
     
     # One-sample t-test against chance (50%)
-    print_and_log("\nH0: Accuracy = 50% (chance level)")
-    print_and_log("H1: Accuracy ≠ 50%")
-    
     t_stat, p_value = ttest_1samp(participant_accuracy, 50)
     
-    print_and_log(f"\nOne-sample t-test:")
-    print_and_log(f"  t({len(participant_accuracy)-1}) = {t_stat:.3f}")
-    print_and_log(f"  p-value = {p_value:.4f}")
-    print_and_log(f"  Mean accuracy: {participant_accuracy.mean():.2f}%")
-    print_and_log(f"  95% CI: [{participant_accuracy.mean() - 1.96 * participant_accuracy.sem():.2f}%, "
-          f"{participant_accuracy.mean() + 1.96 * participant_accuracy.sem():.2f}%]")
+    print_and_log("### One-Sample t-Test Results\n")
+    print_and_log(f"- **t-statistic:** t({len(participant_accuracy)-1}) = {t_stat:.3f}")
+    print_and_log(f"- **p-value:** {p_value:.4f}")
+    print_and_log(f"- **Mean accuracy:** {participant_accuracy.mean():.2f}%")
+    print_and_log(f"- **95% Confidence Interval:** [{participant_accuracy.mean() - 1.96 * participant_accuracy.sem():.2f}%, "
+          f"{participant_accuracy.mean() + 1.96 * participant_accuracy.sem():.2f}%]\n")
     
+    print_and_log("### Interpretation\n")
     if p_value < 0.05:
-        print_and_log(f"\n  Result: REJECT H0 (p < 0.05)")
+        print_and_log(f"**Result:** REJECT H₀ (p < 0.05)\n")
         if participant_accuracy.mean() > 50:
-            print_and_log(f"  Conclusion: Participants performed significantly BETTER than chance.")
+            print_and_log(f"**Conclusion:** Participants performed significantly **better than chance**.\n")
         else:
-            print_and_log(f"  Conclusion: Participants performed significantly WORSE than chance.")
+            print_and_log(f"**Conclusion:** Participants performed significantly **worse than chance**.\n")
     else:
-        print_and_log(f"\n  Result: FAIL TO REJECT H0 (p ≥ 0.05)")
-        print_and_log(f"  Conclusion: No significant difference from chance level.")
+        print_and_log(f"**Result:** FAIL TO REJECT H₀ (p ≥ 0.05)\n")
+        print_and_log(f"**Conclusion:** No significant difference from chance level.\n")
     
     # Effect size (Cohen's d)
     cohens_d = (participant_accuracy.mean() - 50) / participant_accuracy.std()
-    print_and_log(f"\n  Effect size (Cohen's d): {cohens_d:.3f}")
     if abs(cohens_d) < 0.2:
         effect_interpretation = "negligible"
     elif abs(cohens_d) < 0.5:
@@ -207,14 +211,13 @@ def hypothesis_testing(df, participant_accuracy):
         effect_interpretation = "medium"
     else:
         effect_interpretation = "large"
-    print_and_log(f"  Interpretation: {effect_interpretation} effect")
+    
+    print_and_log("### Effect Size\n")
+    print_and_log(f"- **Cohen's d:** {cohens_d:.3f}")
+    print_and_log(f"- **Interpretation:** {effect_interpretation} effect\n")
 
 def correlation_analysis(df):
     """Analyze correlations between variables"""
-    print_and_log("\n" + "=" * 80)
-    print_and_log("CORRELATION ANALYSIS")
-    print_and_log("=" * 80)
-    
     # Aggregate by participant
     participant_data = df.groupby('participant__id').agg({
         'correct': 'mean',
@@ -224,38 +227,41 @@ def correlation_analysis(df):
     })
     participant_data['accuracy'] = participant_data['correct'] * 100
     
+    print_and_log("### Participant-Level Correlations\n")
+    
     # Accuracy vs. Confidence
     r_conf, p_conf = pearsonr(participant_data['accuracy'], participant_data['confidence'])
-    print_and_log(f"\nAccuracy vs. Confidence:")
-    print_and_log(f"  Pearson r = {r_conf:.3f}, p = {p_conf:.4f}")
+    print_and_log("**Accuracy vs. Confidence:**")
+    print_and_log(f"- Pearson r = {r_conf:.3f}, p = {p_conf:.4f}\n")
     
     # Accuracy vs. Response Time
     r_time, p_time = pearsonr(participant_data['accuracy'], participant_data['response_time'])
-    print_and_log(f"\nAccuracy vs. Response Time:")
-    print_and_log(f"  Pearson r = {r_time:.3f}, p = {p_time:.4f}")
+    print_and_log("**Accuracy vs. Response Time:**")
+    print_and_log(f"- Pearson r = {r_time:.3f}, p = {p_time:.4f}\n")
     
     # Accuracy vs. Experience
     r_exp, p_exp = pearsonr(participant_data['accuracy'], participant_data['participant__experience'])
-    print_and_log(f"\nAccuracy vs. Teaching Experience:")
-    print_and_log(f"  Pearson r = {r_exp:.3f}, p = {p_exp:.4f}")
+    print_and_log("**Accuracy vs. Teaching Experience:**")
+    print_and_log(f"- Pearson r = {r_exp:.3f}, p = {p_exp:.4f}\n")
     
     # Confidence vs. Correctness (per response)
-    print_and_log(f"\nConfidence by correctness:")
+    print_and_log("### Response-Level Analysis\n")
+    print_and_log("**Confidence by Correctness:**\n")
+    
     correct_conf = df[df['correct'] == 1]['confidence'].mean()
     incorrect_conf = df[df['correct'] == 0]['confidence'].mean()
-    print_and_log(f"  Correct responses: M = {correct_conf:.2f} (SD = {df[df['correct'] == 1]['confidence'].std():.2f})")
-    print_and_log(f"  Incorrect responses: M = {incorrect_conf:.2f} (SD = {df[df['correct'] == 0]['confidence'].std():.2f})")
+    correct_sd = df[df['correct'] == 1]['confidence'].std()
+    incorrect_sd = df[df['correct'] == 0]['confidence'].std()
+    
+    print_and_log(f"- **Correct responses:** M = {correct_conf:.2f} (SD = {correct_sd:.2f})")
+    print_and_log(f"- **Incorrect responses:** M = {incorrect_conf:.2f} (SD = {incorrect_sd:.2f})\n")
     
     t_stat, p_value = stats.ttest_ind(df[df['correct'] == 1]['confidence'], 
                                        df[df['correct'] == 0]['confidence'])
-    print_and_log(f"  t-test: t = {t_stat:.3f}, p = {p_value:.4f}")
+    print_and_log(f"**Independent t-test:** t = {t_stat:.3f}, p = {p_value:.4f}\n")
 
 def text_difficulty_analysis(df):
     """Analyze which texts were most difficult to classify"""
-    print_and_log("\n" + "=" * 80)
-    print_and_log("TEXT DIFFICULTY ANALYSIS")
-    print_and_log("=" * 80)
-    
     # Use only text ID, not title
     text_stats = df.groupby(['text__id', 'text__origin']).agg({
         'correct': 'mean',
@@ -265,14 +271,17 @@ def text_difficulty_analysis(df):
     text_stats['accuracy'] = (text_stats['correct'] * 100).round(1)
     text_stats = text_stats.sort_values('accuracy')
     
-    print_and_log("\nTexts ranked by difficulty (lowest accuracy first):")
-    print_and_log("\n" + text_stats[['accuracy', 'confidence', 'response_time']].to_string())
+    print_and_log("Texts ranked by difficulty (lowest accuracy first):\n")
+    print_and_log("| Text ID | Origin | Accuracy (%) | Confidence | Response Time (ms) |")
+    print_and_log("|--------:|:-------|-------------:|-----------:|-------------------:|")
+    
+    for (text_id, origin), row in text_stats.iterrows():
+        print_and_log(f"| {text_id} | {origin.upper()} | {row['accuracy']:.1f} | {row['confidence']:.2f} | {row['response_time']:.0f} |")
+    print_and_log("")
 
 def create_visualizations(df, participant_accuracy):
     """Create all necessary visualizations"""
-    print_and_log("\n" + "=" * 80)
-    print_and_log("GENERATING VISUALIZATIONS")
-    print_and_log("=" * 80)
+    print_and_log("Generating visualizations...\n")
     
     # 1. Accuracy visualizations
     # Histogram of participant accuracy
@@ -289,7 +298,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'accuracy' / 'histogram.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: accuracy/histogram.png")
+    print_and_log("- ✓ `accuracy/histogram.png`")
     
     # Box plot of accuracy
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -302,7 +311,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'accuracy' / 'boxplot.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: accuracy/boxplot.png")
+    print_and_log("- ✓ `accuracy/boxplot.png`")
     
     # Accuracy by text origin
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -318,7 +327,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'accuracy' / 'by_origin.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: accuracy/by_origin.png")
+    print_and_log("- ✓ `accuracy/by_origin.png`")
     
     # Confusion matrix heatmap
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -331,7 +340,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'accuracy' / 'confusion_matrix.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: accuracy/confusion_matrix.png")
+    print_and_log("- ✓ `accuracy/confusion_matrix.png`")
     
     # 2. Confidence and Response Time visualizations
     # Confidence distribution
@@ -345,7 +354,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'confidence_time' / 'confidence_distribution.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: confidence_time/confidence_distribution.png")
+    print_and_log("- ✓ `confidence_time/confidence_distribution.png`")
     
     # Confidence by correctness
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -358,7 +367,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'confidence_time' / 'confidence_by_correctness.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: confidence_time/confidence_by_correctness.png")
+    print_and_log("- ✓ `confidence_time/confidence_by_correctness.png`")
     
     # Response time distribution (in seconds)
     df['response_time_sec'] = df['response_time'] / 1000
@@ -371,7 +380,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'confidence_time' / 'response_time_distribution.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: confidence_time/response_time_distribution.png")
+    print_and_log("- ✓ `confidence_time/response_time_distribution.png`")
     
     # Response time by correctness
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -384,7 +393,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'confidence_time' / 'response_time_by_correctness.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: confidence_time/response_time_by_correctness.png")
+    print_and_log("- ✓ `confidence_time/response_time_by_correctness.png`")
     
     # 3. Correlation visualizations
     participant_data = df.groupby('participant__id').agg({
@@ -416,7 +425,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'correlations' / 'experience_vs_accuracy.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: correlations/experience_vs_accuracy.png")
+    print_and_log("- ✓ `correlations/experience_vs_accuracy.png`")
     
     # Confidence vs Accuracy
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -431,7 +440,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'correlations' / 'confidence_vs_accuracy.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: correlations/confidence_vs_accuracy.png")
+    print_and_log("- ✓ `correlations/confidence_vs_accuracy.png`")
     
     # 4. Text-level analysis (using text ID only)
     fig, ax = plt.subplots(figsize=(12, 8))
@@ -466,7 +475,7 @@ def create_visualizations(df, participant_accuracy):
     plt.tight_layout()
     plt.savefig(output_dir / 'by_text' / 'accuracy_by_text.png', dpi=300, bbox_inches='tight')
     plt.close()
-    print_and_log("✓ Saved: by_text/accuracy_by_text.png")
+    print_and_log("- ✓ `by_text/accuracy_by_text.png`\n")
 
 def main():
     """Main analysis function"""
@@ -481,15 +490,14 @@ def main():
     # Create output directory structure
     output_dir = create_output_structure(filepath)
     
-    # Create output log file
-    log_filename = output_dir / "analysis_results.txt"
+    # Create output log file (now in markdown)
+    log_filename = output_dir / "analysis_results.md"
     
     with open(log_filename, 'w') as output_file:
-        print_and_log("\n" + "=" * 80)
-        print_and_log("AI TEXT DETECTION STUDY - STATISTICAL ANALYSIS")
-        print_and_log("=" * 80)
-        print_and_log(f"\nAnalysis date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        print_and_log(f"Loading data from: {filepath}\n")
+        print_and_log("# AI Text Detection Study - Statistical Analysis\n")
+        print_and_log(f"**Analysis Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  ")
+        print_and_log(f"**Data Source:** `{filepath}`\n")
+        print_and_log("---\n")
         
         # Load data
         df = load_data(filepath)
@@ -498,38 +506,45 @@ def main():
         export_text_mapping(df)
         
         # Run analyses
+        print_and_log("## 1. Descriptive Statistics\n")
         descriptive_statistics(df)
+        
+        print_and_log("---\n")
+        print_and_log("## 2. Accuracy Analysis\n")
         participant_accuracy = accuracy_analysis(df)
+        
+        print_and_log("---\n")
+        print_and_log("## 3. Hypothesis Testing\n")
         hypothesis_testing(df, participant_accuracy)
+        
+        print_and_log("---\n")
+        print_and_log("## 4. Correlation Analysis\n")
         correlation_analysis(df)
+        
+        print_and_log("---\n")
+        print_and_log("## 5. Text Difficulty Analysis\n")
         text_difficulty_analysis(df)
+        
+        print_and_log("---\n")
+        print_and_log("## 6. Visualizations\n")
         create_visualizations(df, participant_accuracy)
         
-        print_and_log("\n" + "=" * 80)
-        print_and_log("ANALYSIS COMPLETE")
-        print_and_log("=" * 80)
-        print_and_log(f"\nAll results saved to: {output_dir}")
-        print_and_log("\nGenerated structure:")
-        print_and_log("  analysis_results.txt")
-        print_and_log("  text_id_mapping.txt")
-        print_and_log("  accuracy/")
-        print_and_log("    - histogram.png")
-        print_and_log("    - boxplot.png")
-        print_and_log("    - by_origin.png")
-        print_and_log("    - confusion_matrix.png")
-        print_and_log("  confidence_time/")
-        print_and_log("    - confidence_distribution.png")
-        print_and_log("    - confidence_by_correctness.png")
-        print_and_log("    - response_time_distribution.png")
-        print_and_log("    - response_time_by_correctness.png")
-        print_and_log("  correlations/")
-        print_and_log("    - experience_vs_accuracy.png")
-        print_and_log("    - confidence_vs_accuracy.png")
-        print_and_log("  by_text/")
-        print_and_log("    - accuracy_by_text.png")
-        print_and_log("\n")
+        print_and_log("---\n")
+        print_and_log("## Summary\n")
+        print_and_log(f"Analysis complete! All results have been saved to: `{output_dir.name}`\n")
+        print_and_log("### Generated Files\n")
+        print_and_log("**Reports:**")
+        print_and_log("- `analysis_results.md` - This comprehensive analysis report")
+        print_and_log("- `text_id_mapping.md` - Reference guide mapping text IDs to titles\n")
+        print_and_log("**Visualizations:**")
+        print_and_log("- `accuracy/` - Accuracy distribution and performance metrics")
+        print_and_log("- `confidence_time/` - Confidence and response time analyses")
+        print_and_log("- `correlations/` - Relationship analyses between variables")
+        print_and_log("- `by_text/` - Item-level difficulty analysis\n")
     
-    print(f"\nAll results saved to: {output_dir}")
+    print(f"\n{'='*80}")
+    print(f"Analysis complete! Results saved to: {output_dir}")
+    print(f"{'='*80}\n")
 
 if __name__ == "__main__":
     main()

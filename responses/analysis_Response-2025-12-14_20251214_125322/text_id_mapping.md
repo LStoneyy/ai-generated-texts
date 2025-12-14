@@ -1,0 +1,26 @@
+# Text ID to Title Mapping
+
+This document maps each Text ID used in the analysis to its full title.
+
+---
+
+**Text 1:** Language Planning and resulting Disfluencies
+
+**Text 2:** Nationhood and its discontents: Exploring “Imagined Communities” in George Bernard Shaw’s “Saint Joan”
+
+**Text 3:** AAVE as a Boundary in Court
+
+**Text 4:** Metaphors Octopuses Live By? – A Cognitive Zoosemiotic Survey on Behavioral Mimicry as Evolutionary Contribution to Conceptual Metaphor Theory
+
+**Text 5:** Traditional Maori Gender Roles and “Chappy“ - a comparison
+
+**Text 6:** Code-Switching and Emotional Expression in Digital Diaries
+
+**Text 7:** Temporal Displacement and Narrative Voice in Contemporary Eco-Fiction
+
+**Text 8:** Performative Silence in Postcolonial Poetry
+
+**Text 9:** Metaphorical Mapping of Urban Space in Young Adult Graphic Novels
+
+**Text 10:** The Role of Faux-Archaism in Contemporary Online Poetry Communities
+
