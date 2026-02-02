@@ -2,6 +2,11 @@
 __pycache__/
 *.py[codz]
 *$py.class
+.DS_Store
+
+# Study-specific files
+Response-*.csv
+analysis_*/
 
 # C extensions
 *.so
