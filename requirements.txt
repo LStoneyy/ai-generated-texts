@@ -1,5 +1,0 @@
-Django>=5.0,<6.0
-gunicorn
-python-dotenv
-django-import-export
-django-livereload-server

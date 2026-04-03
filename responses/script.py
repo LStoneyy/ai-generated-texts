@@ -1,3 +1,18 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "pandas",
+#     "numpy",
+#     "matplotlib",
+#     "seaborn",
+#     "scipy",
+# ]
+# ///
+"""
+To run:
+    uv run ./script.py path_to_your_data.csv
+"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,16 +23,6 @@ import sys
 import os
 from datetime import datetime
 from pathlib import Path
-
-"""
-To run:
-python -m venv .venv
-source .venv/bin/activate  #unix
-.venv\Scripts\activate #windows
-cd responses
-pip install pandas numpy matplotlib seaborn scipy
-python ./script.py path_to_your_data.csv
-"""
 
 # Set style for better-looking plots
 sns.set_style("whitegrid")

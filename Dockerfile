@@ -1,20 +1,16 @@
-# Base Image
 FROM python:3.12-slim
 
-# Set work directory
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
 WORKDIR /app
 
-# Install system dependencies
 RUN apt-get update \
   && apt-get install -y build-essential libpq-dev \
   && apt-get clean
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+COPY pyproject.toml .
+RUN uv pip install --system -r pyproject.toml
 
-# Copy project files (but overridden by bind mount)
 COPY . .
 
 EXPOSE 8000

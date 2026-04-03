@@ -1,0 +1,11 @@
+[project]
+name = "ai-generated-texts"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=5.0,<6.0",
+    "gunicorn",
+    "python-dotenv",
+    "django-import-export",
+    "django-livereload-server",
+]
